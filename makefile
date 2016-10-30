@@ -11,7 +11,7 @@ VALFLAGS=--leak-check=full
 
 TARGET=app
 
-all: ${TARGET}
+all: obj ${TARGET}
 
 obj/%.o: src/%.cpp
 	${CC} ${CFLAGS} -c -o $@ $<
@@ -24,6 +24,9 @@ clean:
 
 mrproper: clean
 	@rm -f ${TARGET}
+
+obj:
+	@mkdir $@
 
 l: ${TARGET}
 	@./${TARGET}
