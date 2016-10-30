@@ -1,0 +1,18 @@
+name: Test
+
+lock: [5.0, 10.0]
+
+foe:
+    - type: 2
+      spawnPos: {x: 400.0, y: 500.0}
+
+    - type: 3
+      spawnPos: {x: 200.0, y: 500.0}
+
+path: res/sprites/path.png
+
+foreground: res/sprites/foreground.png
+
+background: res/sprites/background.png
+
+difficulty: 2
