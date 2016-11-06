@@ -34,7 +34,7 @@ void CRectangle::draw(sf::RenderWindow *window)
 	window->draw(m_rec);
 }
 
-void CRectangle::update(float dt, float wWidth, float wHeight, float moveSpeed)
+void CRectangle::update(float dt, float limit, float moveSpeed)
 {
 	if (m_eDir == Left)
 	{
@@ -50,7 +50,7 @@ void CRectangle::update(float dt, float wWidth, float wHeight, float moveSpeed)
 	}
 	else
 	{
-		if (m_rec.getPosition().x + m_rec.getSize().x < wWidth)
+		if (m_rec.getPosition().x + m_rec.getSize().x < limit)
 		{
 			m_rec.move(moveSpeed * dt, 0);
 		}

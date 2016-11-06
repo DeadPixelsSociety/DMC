@@ -22,7 +22,7 @@ class CRectangle
 		CRectangle(float type, float psX, float psY);
 		~CRectangle(void);
 		
-		void update(float dt, float wWidth, float wHeight, float moveSpeed);
+		void update(float dt, float limit, float moveSpeed);
 		void draw(sf::RenderWindow *window);
 };
 

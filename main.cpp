@@ -3,9 +3,13 @@
 
 #include "inc/CLevel.h"
 
+// REVOIR DIMENSION ET CALCUL PATH.PNG !!!!!!!!!!!!!!!!!!!!!!
+// TJRS LE CALCULER DU .PNG OU LE METTRE EN BRUT DANS .YAML ?
+
 int main ()
 {
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Pouet");
+	//window.setFramerateLimit(60);
 	//window.setVerticalSyncEnabled(true);
 	//window.setKeyRepeatEnabled(false);
 
@@ -14,6 +18,7 @@ int main ()
 
 	sf::Clock clock;
 	
+	// Set the view of the player.
 	sf::View view;
 	view.reset(sf::FloatRect(0, 0, wWidth, wHeight));
 	view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
@@ -21,8 +26,9 @@ int main ()
 
 	CLevel *lvl = new CLevel("1");
 	
-	float moveSpeed = 1000.0f;
+	float moveSpeed = 10000.0f;
 	
+	// Set the pseudo player.
 	sf::RectangleShape rect(sf::Vector2f(20, 20));
 	rect.setPosition(0, wHeight - 20);
 	rect.setFillColor(sf::Color::Black);
@@ -53,21 +59,36 @@ int main ()
 			}
 		}
 		
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && rect.getPosition().x < lvl->getLength() - 20)
 			rect.move(moveSpeed * clock.getElapsedTime().asSeconds(), 0);
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && rect.getPosition().x >= 0)
 			rect.move(-moveSpeed * clock.getElapsedTime().asSeconds(), 0);
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && rect.getPosition().y > wHeight - 84 - 20) // 84 est que .getDepth() devrais retourner.
+			rect.move(0, (-moveSpeed / 3) * clock.getElapsedTime().asSeconds());
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && rect.getPosition().y <= wHeight - 20)
+			rect.move(0, (moveSpeed / 3) * clock.getElapsedTime().asSeconds());
 			
 		//---- UPDATE ----
 		
+		// Move or stop the scrolling when the player is either
+		// at the start of the level or at the end.
 		if (rect.getPosition().x + 10 > wWidth / 2)
+		{	
 			viewPos.x = rect.getPosition().x + 10;
+			
+			if (rect.getPosition().x + 10 > lvl->getLength() - (wWidth / 2))
+			{
+				viewPos.x = lvl->getLength() - (wWidth / 2);
+			}
+		}
 		else
+		{
 			viewPos.x = wWidth / 2;
+		}
 		
 		view.setCenter(viewPos);
 		
-		lvl->update(clock.getElapsedTime().asSeconds(), wWidth, wHeight, moveSpeed);
+		//lvl->update(clock.getElapsedTime().asSeconds(), sf::Vector2f(wWidth, wHeight), moveSpeed);
 
 		//---- DRAWING ----
 
@@ -75,7 +96,7 @@ int main ()
 		
 		window.clear(sf::Color::Black);
 		
-		lvl->draw(&window);
+		lvl->draw(&window, &view);
 
 		window.draw(rect);
 		

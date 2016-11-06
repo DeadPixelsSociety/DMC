@@ -8,7 +8,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/View.hpp>
 #include <yaml-cpp/yaml.h>
 
 #include "../inc/CRectangle.h"
@@ -35,7 +34,7 @@ class CLevel
 		sf::Texture *m_pTBack;
 		sf::Sprite m_background;
 		
-		float m_sizeLevel;
+		float m_length;
 		float m_depth;
 		
 		// music ?
@@ -47,8 +46,10 @@ class CLevel
 		CLevel(std::string _num);
 		~CLevel(void);
 		
-		void update(float dt, float wWidth, float wHeight, float moveSpeed);
-		void draw(sf::RenderWindow *window);
+		float getLength(void);
+		float getDepth(void);
+		void  update(float dt, sf::Vector2f wDim, float moveSpeed);
+		void  draw(sf::RenderWindow *window, sf::View *viewPlayer);
 	
 	private:
 	
