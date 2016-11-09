@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-Wall -O2 -g
+CFLAGS=-Wall -std=c++11
 
 SRC=$(wildcard src/*.cpp)
 OBJ=$(addprefix obj/, $(notdir $(SRC:.cpp=.o)))
@@ -31,5 +31,8 @@ obj:
 l: ${TARGET}
 	@./${TARGET}
 
-v: ${TARGET}
+v: debugVal ${TARGET}
 	@valgrind ${VALFLAGS} ./${TARGET}
+
+debugVal:
+	$(eval CFLAGS += -g)

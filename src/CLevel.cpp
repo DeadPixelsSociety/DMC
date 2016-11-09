@@ -27,9 +27,9 @@ CLevel::CLevel(std::string _num)
 	}
 
 
-	size_t nbrFoe = levelFile["foe"].size();
+	size_t nbrFoes = levelFile["foe"].size();
 	float type, spX, spY;
-	for(size_t foe = 0; foe < nbrFoe; foe++)
+	for(size_t foe = 0; foe < nbrFoes; foe++)
 	{
 		type = levelFile["foe"][foe]["type"].as<float>();
 		spX = levelFile["foe"][foe]["spawnPos"]["x"].as<float>();
@@ -78,10 +78,9 @@ CLevel::~CLevel()
 	delete m_pTPath;
 	delete m_pTFore;
 
-	size_t size = m_pArrayFoes.size();
-	for (size_t foe = 0; foe < size; foe++)
+	for (auto foe : m_pArrayFoes)
 	{
-		delete m_pArrayFoes[foe];
+		delete foe;
 	}
 }
 
@@ -99,17 +98,46 @@ float CLevel::getDepth(void)
 	return m_depth;
 }
 
-size_t *CLevel::foesInScreen()
+void CLevel::foesInScreen(sf::RenderWindow &window, sf::View &viewPlayer, std::vector<size_t> *foesVisibles)
 {
-	// Si position de foe dans view
-	// mettre index du foe dans res
+	// Fill a vector with indexs of all the foes visibled in the view.
 	
-	// Dynamic obligé ?
+	size_t xPosLeftView = viewPlayer.getCenter().x - window.getSize().x / 2;
+	size_t xPosRightView = viewPlayer.getCenter().x + window.getSize().x / 2;
+	size_t rightCorner = 0;
+	size_t leftCorner = 0;
 	
-	return 0;
+	size_t size = m_pArrayFoes.size();
+	for (size_t foe = 0; foe < size; foe++)
+	{
+		rightCorner = m_pArrayFoes[foe]->getPosition().x + m_pArrayFoes[foe]->getSize().x;
+		leftCorner = m_pArrayFoes[foe]->getPosition().x;
+		
+		if ((rightCorner > xPosLeftView && rightCorner < xPosRightView) ||
+			(leftCorner > xPosLeftView && leftCorner < xPosRightView))
+		{
+			foesVisibles->push_back(foe);
+		}
+	}
 }
 
-void CLevel::update(float dt, sf::Vector2f wDim, float moveSpeed)
+void  CLevel::printNbrEntity(sf::RenderWindow &window, sf::View &viewPlayer)
+{
+	// Print the number of entity in the current view.
+	
+	sf::Font font;
+	if (!font.loadFromFile("res/fonts/sansation.ttf")) {}
+	sf::Text foe; foe.setFont(font); foe.setCharacterSize(12); foe.setStyle(sf::Text::Bold); foe.setColor(sf::Color::Black);
+	
+	std::vector<size_t> foesVisibles;
+	foesInScreen(window, viewPlayer, &foesVisibles);
+	
+	foe.setString("Entity : " + std::to_string(foesVisibles.size()));
+	foe.setPosition(viewPlayer.getCenter().x - window.getSize().x / 2 + 75, viewPlayer.getCenter().y - window.getSize().y / 2 + 5);
+	window.draw(foe);
+}
+
+void CLevel::update(float dt, sf::Vector2f wDim)
 {
 	// Gestion des foes
 	/*
@@ -121,41 +149,39 @@ void CLevel::update(float dt, sf::Vector2f wDim, float moveSpeed)
 	
 	// Delete tous les foes qui sont à gauche de la view ?	
 	
-	size_t size = m_pArrayFoes.size();
-	for (size_t rect = 0; rect < size; rect++)
+	for (auto foe : m_pArrayFoes)
 	{
-		m_pArrayFoes[rect]->update(dt, wDim.x, moveSpeed);
+		foe->update(dt, wDim.x);
 	}
 }
 
-void CLevel::draw(sf::RenderWindow *window, sf::View *viewPlayer)
+void CLevel::draw(sf::RenderWindow &window, sf::View &viewPlayer)
 {
 	// Draw all the drawable entitys inside the level.
 	
 	// Drawing of the 3 sprites of the level with parallaxe effect.
-	sf::View view;
-	view.reset(sf::FloatRect(0, 0, window->getSize().x, window->getSize().y));
-	view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
+	sf::View viewParallaxe(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
 	
-	sf::Vector2f viewPos((viewPlayer->getCenter().x + m_pTBack->getSize().x) * 0.15, viewPlayer->getCenter().y);
-	view.setCenter(viewPos);
-	window->setView(view);
-	window->draw(m_background);
+	viewParallaxe.move(viewPlayer.getCenter().x * 0.15f, 0);
+	window.setView(viewParallaxe);
+	window.draw(m_background);
 	
-	viewPos.x = (viewPlayer->getCenter().x + m_pTFore->getSize().x) * 0.35;
-	view.setCenter(viewPos);
-	window->setView(view);
-	window->draw(m_foreground);
+	viewParallaxe.move(viewPlayer.getCenter().x * 0.35f, 0);
+	window.setView(viewParallaxe);
+	window.draw(m_foreground);
 
 	// Reset the view to default so the path sprite
 	// is draw at the speed of the player.	
-	window->setView(*viewPlayer);
-	window->draw(m_path);
+	window.setView(viewPlayer);
+	window.draw(m_path);
 
-	// Draw all other entity.
-	size_t size = m_pArrayFoes.size();
-	for (size_t rect = 0; rect < size; rect++)
+	//printNbrEntity(window, viewPlayer);
+
+	// Draw only the entity in the view.
+	std::vector<size_t> foesVisibles;
+	foesInScreen(window, viewPlayer, &foesVisibles);
+	for (auto index : foesVisibles)
 	{
-		m_pArrayFoes[rect]->draw(window);
+		m_pArrayFoes[index]->draw(window);
 	}
 }

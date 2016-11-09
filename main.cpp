@@ -1,42 +1,53 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/System/Clock.hpp>
+#include <string>
 
 #include "inc/CLevel.h"
+
+// TOUTDOUX
 
 // REVOIR DIMENSION ET CALCUL PATH.PNG !!!!!!!!!!!!!!!!!!!!!!
 // TJRS LE CALCULER DU .PNG OU LE METTRE EN BRUT DANS .YAML ?
 
+// PAS MOYEN D'UTILISER view.move() ? PLUS LISIBLE ET PROPER ?
+
+// FAIRE ENUM MOVEMENT (LEFT RIGH STOP ...) POUR PLAYER
+// ET UNE ENUM KEYCONTROL ? (sf::Keyboard::Right, sf::Keyboard::Up, ...)
+
 int main ()
 {
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Pouet");
-	//window.setFramerateLimit(60);
+	window.setFramerateLimit(60);
 	//window.setVerticalSyncEnabled(true);
 	//window.setKeyRepeatEnabled(false);
 
+	sf::Font font;
+	if (!font.loadFromFile("res/fonts/sansation.ttf")) {}
+	sf::Text fps; fps.setFont(font); fps.setCharacterSize(12); fps.setStyle(sf::Text::Bold); fps.setColor(sf::Color::Black); fps.setPosition(5,5);
+	
 	float wWidth = window.getSize().x;
 	float wHeight = window.getSize().y;
-
-	sf::Clock clock;
 	
 	// Set the view of the player.
-	sf::View view;
-	view.reset(sf::FloatRect(0, 0, wWidth, wHeight));
-	view.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
+	sf::View view(sf::FloatRect(0, 0, wWidth, wHeight));
 	sf::Vector2f viewPos(wWidth / 2, wHeight / 2);
 
-	CLevel *lvl = new CLevel("1");
+	CLevel lvl("1");
 	
-	float moveSpeed = 10000.0f;
+	float moveSpeed = 5.0f * 5000.0f;
 	
 	// Set the pseudo player.
 	sf::RectangleShape rect(sf::Vector2f(20, 20));
 	rect.setPosition(0, wHeight - 20);
 	rect.setFillColor(sf::Color::Black);
 	
+	sf::Clock clock;
+	sf::Time frameTime;
+	int frameRate;
 	while (window.isOpen())
 	{
-	
-		clock.restart();
+		frameTime = clock.restart();
 	
 		//---- EVENT ----
 	
@@ -54,16 +65,17 @@ int main ()
 						window.close();
 					break;
 					
+					
 				default :
 					break;
 			}
 		}
 		
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && rect.getPosition().x < lvl->getLength() - 20)
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && rect.getPosition().x < lvl.getLength() - 20)
 			rect.move(moveSpeed * clock.getElapsedTime().asSeconds(), 0);
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && rect.getPosition().x >= 0)
 			rect.move(-moveSpeed * clock.getElapsedTime().asSeconds(), 0);
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && rect.getPosition().y > wHeight - 84 - 20) // 84 est que .getDepth() devrais retourner.
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && rect.getPosition().y > wHeight - 84 - 20) // 84 est ce que .getDepth() devrais retourner.
 			rect.move(0, (-moveSpeed / 3) * clock.getElapsedTime().asSeconds());
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && rect.getPosition().y <= wHeight - 20)
 			rect.move(0, (moveSpeed / 3) * clock.getElapsedTime().asSeconds());
@@ -76,9 +88,9 @@ int main ()
 		{	
 			viewPos.x = rect.getPosition().x + 10;
 			
-			if (rect.getPosition().x + 10 > lvl->getLength() - (wWidth / 2))
+			if (rect.getPosition().x + 10 > lvl.getLength() - (wWidth / 2))
 			{
-				viewPos.x = lvl->getLength() - (wWidth / 2);
+				viewPos.x = lvl.getLength() - (wWidth / 2);
 			}
 		}
 		else
@@ -87,23 +99,24 @@ int main ()
 		}
 		
 		view.setCenter(viewPos);
+		fps.setPosition(viewPos.x - wWidth / 2 + 5, viewPos.y - wHeight / 2 + 5);
 		
-		//lvl->update(clock.getElapsedTime().asSeconds(), sf::Vector2f(wWidth, wHeight), moveSpeed);
+		lvl.update(clock.getElapsedTime().asSeconds(), sf::Vector2f(lvl.getLength(), wHeight));
 
 		//---- DRAWING ----
-
-		window.setView(view);
 		
 		window.clear(sf::Color::Black);
 		
-		lvl->draw(&window, &view);
+		lvl.draw(window, view);
 
 		window.draw(rect);
 		
+		frameRate = 1 / (frameTime.asSeconds());
+		fps.setString("FPS : " + std::to_string(frameRate));
+		window.draw(fps);
+		
 		window.display();
 	}
-
-	delete lvl;
 
 	return EXIT_SUCCESS;
 }

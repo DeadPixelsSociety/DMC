@@ -9,6 +9,12 @@ foe:
     - type: 3
       spawnPos: {x: 200.0, y: 500.0}
 
+    - type: 1
+      spawnPos: {x: 600.0, y: 500.0}
+
+    - type: 4
+      spawnPos: {x: 1000.0, y: 500.0}
+
 path: res/sprites/path.png
 
 foreground: res/sprites/foreground.png

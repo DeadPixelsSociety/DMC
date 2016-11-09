@@ -2,6 +2,9 @@
 #define __CRECTANGLE_H
 
 #include <iostream>
+#include <random>
+#include <cstdlib>
+#include <ctime>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -16,14 +19,17 @@ class CRectangle
 		sf::RectangleShape m_rec;
 		bool m_isSpawned;
 		EDirection m_eDir;
+		float m_moveSpeed;
 	
 	public:
 	
 		CRectangle(float type, float psX, float psY);
 		~CRectangle(void);
-		
-		void update(float dt, float limit, float moveSpeed);
-		void draw(sf::RenderWindow *window);
+
+		sf::Vector2f getPosition(void);
+		sf::Vector2f getSize(void);
+		void update(float dt, float limit);
+		void draw(sf::RenderWindow &window);
 };
 
 #endif

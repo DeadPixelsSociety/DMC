@@ -8,6 +8,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/View.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <yaml-cpp/yaml.h>
 
 #include "../inc/CRectangle.h"
@@ -48,12 +50,12 @@ class CLevel
 		
 		float getLength(void);
 		float getDepth(void);
-		void  update(float dt, sf::Vector2f wDim, float moveSpeed);
-		void  draw(sf::RenderWindow *window, sf::View *viewPlayer);
+		void  foesInScreen(sf::RenderWindow &window, sf::View &viewPlayer, std::vector<size_t> *foesVisibles);
+		void  printNbrEntity(sf::RenderWindow &window, sf::View &viewPlayer);
+		void  update(float dt, sf::Vector2f wDim);
+		void  draw(sf::RenderWindow &window, sf::View &viewPlayer);
 	
 	private:
-	
-		size_t *foesInScreen(void);
 };
 
 #endif

@@ -18,10 +18,11 @@ Inspiration : [Cadillacs & Dinosaurs], [Dungeons & Dragons - Shadow over Mystara
 ## Project structure :
 - src : *.cpp,
 - inc : *.h,
-- obj : *.o,
+- obj : *.o (created after compilation),
 - res :
 	- sprites : all the sprites used,
-	- levels : yaml file which discribe a level.
+	- levels : yaml file which discribe a level,
+	- fonts : all the fonts used.
 
 ## Run
 * To compile, type ```make```
