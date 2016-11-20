@@ -7,7 +7,7 @@ OBJ=$(addprefix obj/, $(notdir $(SRC:.cpp=.o)))
 LIBSFML=-lsfml-graphics -lsfml-window -lsfml-system
 LIBYAML=-lyaml-cpp
 
-VALFLAGS=--leak-check=full 
+VALFLAGS=--leak-check=full
 
 TARGET=app
 

@@ -1,5 +1,5 @@
-#ifndef __CLEVEL_H
-#define __CLEVEL_H
+#ifndef __CLEVEL_HPP
+#define __CLEVEL_HPP
 
 #include <iostream>
 #include <string>
@@ -12,7 +12,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include <yaml-cpp/yaml.h>
 
-#include "../inc/CRectangle.h"
+#include "../inc/CFoe.hpp"
 
 class CLevel
 {
@@ -24,7 +24,7 @@ class CLevel
 		std::vector<float> m_lockZones;
 		
 		// Array of foes.
-		std::vector<CRectangle *> m_pArrayFoes;
+		std::vector<CFoe *> m_pArrayFoes;
 		
 		// Where the player walk
 		sf::Texture *m_pTPath;
@@ -50,12 +50,12 @@ class CLevel
 		
 		float getLength(void);
 		float getDepth(void);
-		void  foesInScreen(sf::RenderWindow &window, sf::View &viewPlayer, std::vector<size_t> *foesVisibles);
-		void  printNbrEntity(sf::RenderWindow &window, sf::View &viewPlayer);
+		void  foesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, std::vector<size_t> *foesVisibles);
+		std::string nbrFoesInScreen(sf::Vector2u wDim, sf::Vector2f centerView);
 		void  update(float dt, sf::Vector2f wDim);
-		void  draw(sf::RenderWindow &window, sf::View &viewPlayer);
+		void  draw(sf::RenderWindow &window, sf::View viewPlayer);
 	
 	private:
 };
 
-#endif
+#endif //__CLEVEL_HPP

@@ -1,4 +1,4 @@
-#include "../inc/CRectangle.h"
+#include "../inc/CRectangle.hpp"
 
 CRectangle::CRectangle(float type, float psX, float psY)
 {
@@ -23,14 +23,14 @@ CRectangle::CRectangle(float type, float psX, float psY)
 	sf::Color color(std::rand() % 256, std::rand() % 256, std::rand() % 256);
 	m_rec.setFillColor(color);
 	
-	m_moveSpeed = (float) (1 * 1000 + (std::rand() % (6 * 1000 - 1 * 1000)));
+	m_moveSpeed = 5000;
 	
 	m_isSpawned = false;
 	
 	m_rec.setSize(sf::Vector2f(50, 100));
 	m_rec.setPosition(psX, psY);
 	
-	m_eDir = Right;
+	m_eDir = RightV2;
 }
 
 CRectangle::~CRectangle()
@@ -55,7 +55,7 @@ void CRectangle::draw(sf::RenderWindow &window)
 
 void CRectangle::update(float dt, float limit)
 {
-	if (m_eDir == Left)
+	if (m_eDir == LeftV2)
 	{
 		if (m_rec.getPosition().x + m_rec.getSize().x > 0)
 		{
@@ -63,7 +63,7 @@ void CRectangle::update(float dt, float limit)
 		}
 		else
 		{
-			m_eDir = Right;
+			m_eDir = RightV2;
 			m_rec.move(m_moveSpeed * dt, 0);
 		}
 	}
@@ -75,7 +75,7 @@ void CRectangle::update(float dt, float limit)
 		}
 		else
 		{
-			m_eDir = Left;
+			m_eDir = LeftV2;
 			m_rec.move(-m_moveSpeed * dt, 0);
 		}
 	}

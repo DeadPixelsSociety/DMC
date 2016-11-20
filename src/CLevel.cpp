@@ -1,12 +1,7 @@
-#include "../inc/CLevel.h"
+#include "../inc/CLevel.hpp"
 
 CLevel::CLevel(std::string _num)
 {
-
-	/*
-		SUPPRIMER LES OBJETS (YAML::Node, les textures, ...) ?
-	*/
-
 	std::string name("res/levels/level");
 	std::string ext(".yaml");
 	
@@ -35,7 +30,7 @@ CLevel::CLevel(std::string _num)
 		spX = levelFile["foe"][foe]["spawnPos"]["x"].as<float>();
 		spY = levelFile["foe"][foe]["spawnPos"]["y"].as<float>();
 		
-		m_pArrayFoes.push_back(new CRectangle(type, spX, spY));
+		m_pArrayFoes.push_back(new CFoe(type, spX, spY));
 	}
 	
 	m_pTPath = new sf::Texture();
@@ -98,12 +93,12 @@ float CLevel::getDepth(void)
 	return m_depth;
 }
 
-void CLevel::foesInScreen(sf::RenderWindow &window, sf::View &viewPlayer, std::vector<size_t> *foesVisibles)
+void CLevel::foesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, std::vector<size_t> *foesVisibles)
 {
 	// Fill a vector with indexs of all the foes visibled in the view.
 	
-	size_t xPosLeftView = viewPlayer.getCenter().x - window.getSize().x / 2;
-	size_t xPosRightView = viewPlayer.getCenter().x + window.getSize().x / 2;
+	size_t xPosLeftView = centerView.x - wDim.x / 2;
+	size_t xPosRightView = centerView.x + wDim.x / 2;
 	size_t rightCorner = 0;
 	size_t leftCorner = 0;
 	
@@ -121,20 +116,14 @@ void CLevel::foesInScreen(sf::RenderWindow &window, sf::View &viewPlayer, std::v
 	}
 }
 
-void  CLevel::printNbrEntity(sf::RenderWindow &window, sf::View &viewPlayer)
+std::string CLevel::nbrFoesInScreen(sf::Vector2u wDim, sf::Vector2f centerView)
 {
-	// Print the number of entity in the current view.
-	
-	sf::Font font;
-	if (!font.loadFromFile("res/fonts/sansation.ttf")) {}
-	sf::Text foe; foe.setFont(font); foe.setCharacterSize(12); foe.setStyle(sf::Text::Bold); foe.setColor(sf::Color::Black);
+	//
 	
 	std::vector<size_t> foesVisibles;
-	foesInScreen(window, viewPlayer, &foesVisibles);
-	
-	foe.setString("Entity : " + std::to_string(foesVisibles.size()));
-	foe.setPosition(viewPlayer.getCenter().x - window.getSize().x / 2 + 75, viewPlayer.getCenter().y - window.getSize().y / 2 + 5);
-	window.draw(foe);
+	foesInScreen(wDim, centerView, &foesVisibles);
+	int nbrFoes = foesVisibles.size();
+	return " - Entity : " + std::to_string(nbrFoes);
 }
 
 void CLevel::update(float dt, sf::Vector2f wDim)
@@ -155,7 +144,7 @@ void CLevel::update(float dt, sf::Vector2f wDim)
 	}
 }
 
-void CLevel::draw(sf::RenderWindow &window, sf::View &viewPlayer)
+void CLevel::draw(sf::RenderWindow &window, sf::View viewPlayer)
 {
 	// Draw all the drawable entitys inside the level.
 	
@@ -175,11 +164,9 @@ void CLevel::draw(sf::RenderWindow &window, sf::View &viewPlayer)
 	window.setView(viewPlayer);
 	window.draw(m_path);
 
-	//printNbrEntity(window, viewPlayer);
-
 	// Draw only the entity in the view.
 	std::vector<size_t> foesVisibles;
-	foesInScreen(window, viewPlayer, &foesVisibles);
+	foesInScreen(window.getSize(), viewPlayer.getCenter(), &foesVisibles);
 	for (auto index : foesVisibles)
 	{
 		m_pArrayFoes[index]->draw(window);

@@ -17,7 +17,7 @@ Inspiration : [Cadillacs & Dinosaurs], [Dungeons & Dragons - Shadow over Mystara
 
 ## Project structure :
 - src : *.cpp,
-- inc : *.h,
+- inc : *.hpp,
 - obj : *.o (created after compilation),
 - res :
 	- sprites : all the sprites used,

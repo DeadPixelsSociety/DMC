@@ -1,5 +1,5 @@
-#ifndef __CRECTANGLE_H
-#define __CRECTANGLE_H
+#ifndef __CRECTANGLE_HPP
+#define __CRECTANGLE_HPP
 
 #include <iostream>
 #include <random>
@@ -7,10 +7,8 @@
 #include <ctime>
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 
-enum EDirection {Left, Right};
+enum EDirectionV2 {LeftV2, RightV2};
 
 class CRectangle
 {
@@ -18,7 +16,7 @@ class CRectangle
 	
 		sf::RectangleShape m_rec;
 		bool m_isSpawned;
-		EDirection m_eDir;
+		EDirectionV2 m_eDir;
 		float m_moveSpeed;
 	
 	public:
@@ -32,4 +30,4 @@ class CRectangle
 		void draw(sf::RenderWindow &window);
 };
 
-#endif
+#endif //__CRECTANGLE_HPP
