@@ -6,6 +6,9 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Font.hpp>
 
+#include "CLevel.hpp"
+#include "CPlayer.hpp"
+
 class CHud
 {
 	private :
@@ -18,7 +21,12 @@ class CHud
 		CHud(std::string fontPath, float charSize, sf::Vector2f posText);
 		~CHud();
 		
-		void update(sf::RenderWindow &window, sf::View viewPlayer, std::string infos);
+		std::string printFps(sf::Time frameTime);
+		std::string printPosition(CPlayer &player);
+		std::string printNbrFoesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, CLevel &lvl);
+		std::string printNextLockZone(std::queue<float> lockZones);
+		
+		void update(sf::RenderWindow &window, sf::Time frameTime, CPlayer &player, CLevel &lvl);
 		void draw(sf::RenderWindow &window);
 };
 

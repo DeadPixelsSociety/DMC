@@ -8,10 +8,13 @@
 #include "inc/CPlayer.hpp"
 #include "inc/CHud.hpp"
 
-// TOUTDOUX
+/*
+--- TOUTDOUX ---
 
-// REVOIR DIMENSION ET CALCUL PATH.PNG !!!!!!!!!!!!!!!!!!!!!!
-// TJRS LE CALCULER DU .PNG OU LE METTRE EN BRUT DANS .YAML ?
+	* QUAND FIN DE LOCK ZONE, SCROLLING BUG, DECALLAGE.
+
+--- TOUTDOUX ---
+*/
 
 int main ()
 {
@@ -28,7 +31,7 @@ int main ()
 	
 	CPlayer player(wDim, "Pouet");
 	
-	CHud hud("res/fonts/sansation.ttf", 14, sf::Vector2f(5, 5));
+	CHud hud("res/fonts/Hack-Regular.ttf", 15, sf::Vector2f(5, 5));
 	
 	sf::Clock clock;
 	sf::Time frameTime;
@@ -90,12 +93,11 @@ int main ()
 
 		//---- UPDATE ----
 		
-		lvl.update(clock.getElapsedTime().asSeconds(), sf::Vector2f(lvl.getLength(), wHeight));
+		lvl.update(clock.getElapsedTime().asSeconds(), window, player);
 		
-		player.update(clock.getElapsedTime().asSeconds(), wDim, lvl.getLength());
+		player.update(clock.getElapsedTime().asSeconds(), wDim, lvl.getLength(), lvl.getDepth());
 		
-		hud.update(window, player.getView(),\
-				   "Fps : " + std::to_string((int) (1 / (frameTime.asSeconds()))) + lvl.nbrFoesInScreen(window.getSize(), player.getView().getCenter()));
+		hud.update(window, frameTime, player, lvl);
 
 		//---- DRAWING ----
 		

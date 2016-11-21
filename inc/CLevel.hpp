@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <queue>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -12,7 +13,8 @@
 #include <SFML/Graphics/Font.hpp>
 #include <yaml-cpp/yaml.h>
 
-#include "../inc/CFoe.hpp"
+#include "CFoe.hpp"
+#include "CPlayer.hpp"
 
 class CLevel
 {
@@ -20,13 +22,13 @@ class CLevel
 		
 		std::string m_szName;
 		
-		// Keep the x coordonate of zones where we lock the scrolling
-		std::vector<float> m_lockZones;
+		// Keep the x coordonate of zones where we lock the scrolling.
+		std::queue<float> m_lockZones;
 		
 		// Array of foes.
-		std::vector<CFoe *> m_pArrayFoes;
+		std::vector<CFoe *> m_arrayFoes;
 		
-		// Where the player walk
+		// Where the player walk.
 		sf::Texture *m_pTPath;
 		sf::Sprite m_path;
 		// Sprite a the front.
@@ -50,9 +52,10 @@ class CLevel
 		
 		float getLength(void);
 		float getDepth(void);
+		std::queue<float> getLockZones(void);
 		void  foesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, std::vector<size_t> *foesVisibles);
-		std::string nbrFoesInScreen(sf::Vector2u wDim, sf::Vector2f centerView);
-		void  update(float dt, sf::Vector2f wDim);
+		
+		void  update(float dt, sf::RenderWindow &window, CPlayer &player);
 		void  draw(sf::RenderWindow &window, sf::View viewPlayer);
 	
 	private:

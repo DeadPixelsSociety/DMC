@@ -1,6 +1,6 @@
 name: Test
 
-lock: [5.0, 10.0]
+lock: [1500.0]
 
 foe:
     - type: 2
@@ -20,5 +20,7 @@ path: res/sprites/path.png
 foreground: res/sprites/foreground.png
 
 background: res/sprites/background.png
+
+depth: 84
 
 difficulty: 2

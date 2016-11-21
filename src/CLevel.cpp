@@ -18,9 +18,8 @@ CLevel::CLevel(std::string _num)
 	size_t sizeLock = levelFile["lock"].size();
 	for(size_t zone = 0; zone < sizeLock; zone++)
 	{
-		m_lockZones.push_back(levelFile["lock"][zone].as<float>());
+		m_lockZones.push(levelFile["lock"][zone].as<float>());
 	}
-
 
 	size_t nbrFoes = levelFile["foe"].size();
 	float type, spX, spY;
@@ -30,7 +29,7 @@ CLevel::CLevel(std::string _num)
 		spX = levelFile["foe"][foe]["spawnPos"]["x"].as<float>();
 		spY = levelFile["foe"][foe]["spawnPos"]["y"].as<float>();
 		
-		m_pArrayFoes.push_back(new CFoe(type, spX, spY));
+		m_arrayFoes.push_back(new CFoe(type, spX, spY));
 	}
 	
 	m_pTPath = new sf::Texture();
@@ -58,9 +57,8 @@ CLevel::CLevel(std::string _num)
 	m_background.setTexture(*m_pTBack);
 	
 	m_length = m_pTPath->getSize().x;
-	m_depth = m_pTPath->getSize().y;
 	
-	// music ?
+	m_depth = levelFile["depth"].as<float>();
 	
 	m_difficulty = levelFile["difficulty"].as<float>();	
 }
@@ -73,10 +71,17 @@ CLevel::~CLevel()
 	delete m_pTPath;
 	delete m_pTFore;
 
-	for (auto foe : m_pArrayFoes)
+	for (auto foe : m_arrayFoes)
 	{
 		delete foe;
 	}
+}
+
+std::queue<float> CLevel::getLockZones()
+{
+	//
+	
+	return m_lockZones;
 }
 
 float CLevel::getLength(void)
@@ -102,11 +107,11 @@ void CLevel::foesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, std::vecto
 	size_t rightCorner = 0;
 	size_t leftCorner = 0;
 	
-	size_t size = m_pArrayFoes.size();
+	size_t size = m_arrayFoes.size();
 	for (size_t foe = 0; foe < size; foe++)
 	{
-		rightCorner = m_pArrayFoes[foe]->getPosition().x + m_pArrayFoes[foe]->getSize().x;
-		leftCorner = m_pArrayFoes[foe]->getPosition().x;
+		rightCorner = m_arrayFoes[foe]->getPosition().x + m_arrayFoes[foe]->getSize().x;
+		leftCorner = m_arrayFoes[foe]->getPosition().x;
 		
 		if ((rightCorner > xPosLeftView && rightCorner < xPosRightView) ||
 			(leftCorner > xPosLeftView && leftCorner < xPosRightView))
@@ -116,31 +121,37 @@ void CLevel::foesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, std::vecto
 	}
 }
 
-std::string CLevel::nbrFoesInScreen(sf::Vector2u wDim, sf::Vector2f centerView)
+void CLevel::update(float dt, sf::RenderWindow &window, CPlayer &player)
 {
 	//
 	
-	std::vector<size_t> foesVisibles;
-	foesInScreen(wDim, centerView, &foesVisibles);
-	int nbrFoes = foesVisibles.size();
-	return " - Entity : " + std::to_string(nbrFoes);
-}
-
-void CLevel::update(float dt, sf::Vector2f wDim)
-{
-	// Gestion des foes
-	/*
-		- Comment determiner qels foes sont dans la vue courante. (view ?)
-		  Pour chacun de ces foes, appeller leur update() (ou fonction ia, puis update())
-		  
-		  (De même si arme / obstacle implantés.)
-	*/
-	
-	// Delete tous les foes qui sont à gauche de la view ?	
-	
-	for (auto foe : m_pArrayFoes)
+	if (!m_lockZones.empty() || player.getIsBlocked())
 	{
-		foe->update(dt, wDim.x);
+		// The player is in a lock zone,
+		// we check if there are foes in the view,
+		// if not, we disable the lock zone.
+		if (player.getIsBlocked()) {
+			std::vector<size_t> foesVisibles;
+			foesInScreen(window.getSize(), player.getView().getCenter(), &foesVisibles);
+		
+			if (foesVisibles.size() == 0) {
+				player.setIsBlocked(false);
+			}
+		}
+		// We block the player when he enter a lock zone.
+		else
+		{
+			if (player.getPosition().x >= m_lockZones.front())
+			{
+				player.setIsBlocked(true);
+				m_lockZones.pop();
+			}
+		}
+	}
+	
+	for (auto foe : m_arrayFoes)
+	{
+		foe->update(dt, getLength());
 	}
 }
 
@@ -169,6 +180,6 @@ void CLevel::draw(sf::RenderWindow &window, sf::View viewPlayer)
 	foesInScreen(window.getSize(), viewPlayer.getCenter(), &foesVisibles);
 	for (auto index : foesVisibles)
 	{
-		m_pArrayFoes[index]->draw(window);
+		m_arrayFoes[index]->draw(window);
 	}
 }
