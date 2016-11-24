@@ -16,6 +16,7 @@ class CCharacter : public CEntity
 				   float health, float velocity, float atkSpeed, float damage);
 		~CCharacter(void);
 
+		/* Getters and setters. */
 		float getHealth(void);
 		void  setHealth(float newHealth);
 		float getVelocity(void);

@@ -2,6 +2,7 @@
 
 CLevel::CLevel(std::string _num)
 {
+	// Build the path of the yaml file of the current level.
 	std::string name("res/levels/level");
 	std::string ext(".yaml");
 	
@@ -14,6 +15,8 @@ CLevel::CLevel(std::string _num)
 	}
 	
 	m_szName = levelFile["name"].as<std::string>();
+	
+	m_difficulty = levelFile["difficulty"].as<float>();
 	
 	size_t sizeLock = levelFile["lock"].size();
 	for(size_t zone = 0; zone < sizeLock; zone++)
@@ -56,11 +59,12 @@ CLevel::CLevel(std::string _num)
 	}	
 	m_background.setTexture(*m_pTBack);
 	
-	m_length = m_pTPath->getSize().x;
+	// Get the velocity of the foreground and background.
+	m_veloFore = levelFile["veloFore"].as<float>();
+	m_veloBack = levelFile["veloBack"].as<float>();
 	
+	m_length = m_pTPath->getSize().x;	
 	m_depth = levelFile["depth"].as<float>();
-	
-	m_difficulty = levelFile["difficulty"].as<float>();	
 }
 
 CLevel::~CLevel()
@@ -79,7 +83,7 @@ CLevel::~CLevel()
 
 std::queue<float> CLevel::getLockZones()
 {
-	//
+	// Getter for the queue of zones lock.
 	
 	return m_lockZones;
 }
@@ -107,8 +111,9 @@ void CLevel::foesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, std::vecto
 	size_t rightCorner = 0;
 	size_t leftCorner = 0;
 	
+	// We keep indexs of foes in the view.
 	size_t size = m_arrayFoes.size();
-	for (size_t foe = 0; foe < size; foe++)
+	for (size_t foe = 0; foe < size; ++foe)
 	{
 		rightCorner = m_arrayFoes[foe]->getPosition().x + m_arrayFoes[foe]->getSize().x;
 		leftCorner = m_arrayFoes[foe]->getPosition().x;
@@ -121,9 +126,23 @@ void CLevel::foesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, std::vecto
 	}
 }
 
+void CLevel::foesInOrder(float playerPosY, std::vector<size_t> *foesVisibles, std::vector<size_t> *foesFront, std::vector<size_t> *foesBack)
+{
+	// Slice the visibles foes if they are in front of the player of behind him.
+	
+	for (auto index : *foesVisibles)
+	{
+		if ((m_arrayFoes[index]->getPosition().y + m_arrayFoes[index]->getSize().y) > playerPosY) {
+			foesFront->push_back(index);
+		} else {
+			foesBack->push_back(index);
+		}
+	}
+}
+
 void CLevel::update(float dt, sf::RenderWindow &window, CPlayer &player)
 {
-	//
+	// Update entity present in the level.
 	
 	if (!m_lockZones.empty() || player.getIsBlocked())
 	{
@@ -149,36 +168,50 @@ void CLevel::update(float dt, sf::RenderWindow &window, CPlayer &player)
 		}
 	}
 	
+	// Tmp update for the foes.
 	for (auto foe : m_arrayFoes)
 	{
 		foe->update(dt, getLength());
 	}
 }
 
-void CLevel::draw(sf::RenderWindow &window, sf::View viewPlayer)
+void CLevel::draw(sf::RenderWindow &window, CPlayer &player)
 {
 	// Draw all the drawable entitys inside the level.
 	
 	// Drawing of the 3 sprites of the level with parallaxe effect.
 	sf::View viewParallaxe(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
 	
-	viewParallaxe.move(viewPlayer.getCenter().x * 0.15f, 0);
+	viewParallaxe.move(player.getViewPos().x * m_veloBack, 0);
 	window.setView(viewParallaxe);
 	window.draw(m_background);
 	
-	viewParallaxe.move(viewPlayer.getCenter().x * 0.35f, 0);
+	viewParallaxe.move(player.getViewPos().x * m_veloFore, 0);
 	window.setView(viewParallaxe);
 	window.draw(m_foreground);
 
 	// Reset the view to default so the path sprite
 	// is draw at the speed of the player.	
-	window.setView(viewPlayer);
+	window.setView(player.getView());
 	window.draw(m_path);
 
 	// Draw only the entity in the view.
 	std::vector<size_t> foesVisibles;
-	foesInScreen(window.getSize(), viewPlayer.getCenter(), &foesVisibles);
-	for (auto index : foesVisibles)
+	foesInScreen(window.getSize(), player.getViewPos(), &foesVisibles);
+	
+	// Draw with correct perspective.
+	std::vector<size_t> foesFront;
+	std::vector<size_t> foesBack;
+	foesInOrder(player.getPosition().y + player.getSize().y, &foesVisibles, &foesFront, &foesBack);
+	
+	for (auto index : foesBack)
+	{
+		m_arrayFoes[index]->draw(window);
+	}
+	
+	player.draw(window);
+	
+	for (auto index : foesFront)
 	{
 		m_arrayFoes[index]->draw(window);
 	}

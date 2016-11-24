@@ -68,28 +68,28 @@ sf::Vector2f CEntity::getSize(void)
 
 void CEntity::setDirectionH(EDirectionHor newEDirH)
 {
-	//
+	// Setter for the horizontal direction.
 	
 	m_eDirH = newEDirH;
 }
 
 void CEntity::setDirectionV(EDirectionVer newEDirV)
 {
-	//
+	// Setter for the vertical direction.
 	
 	m_eDirV = newEDirV;
 }
 
 void CEntity::draw(sf::RenderWindow &window)
 {
-	// Draw the sprite of the entity
+	// Draw the sprite of the entity.
 	
 	window.draw(m_sprite);
 }
 
 void CEntity::printDir()
 {
-	//
+	// Print the direction of an entity (for debuging).
 	
 	std::string direction;
 	

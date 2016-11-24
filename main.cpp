@@ -1,7 +1,6 @@
 #include <string>
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Font.hpp>
 #include <SFML/System/Clock.hpp>
 
 #include "inc/CLevel.hpp"
@@ -11,7 +10,10 @@
 /*
 --- TOUTDOUX ---
 
-	* QUAND FIN DE LOCK ZONE, SCROLLING BUG, DECALLAGE.
+	[JEREMY] - Implementer le saut.
+	
+	[PAUL] - CLevel entierement fini ?
+		   - Musique.
 
 --- TOUTDOUX ---
 */
@@ -19,9 +21,7 @@
 int main ()
 {
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Pouet");
-	window.setFramerateLimit(60);
-	//window.setVerticalSyncEnabled(true);
-	//window.setKeyRepeatEnabled(false);
+	window.setFramerateLimit(61);
 	
 	float wWidth = window.getSize().x;
 	float wHeight = window.getSize().y;
@@ -35,6 +35,7 @@ int main ()
 	
 	sf::Clock clock;
 	sf::Time frameTime;
+	float dt;
 	while (window.isOpen())
 	{
 		frameTime = clock.restart();
@@ -57,14 +58,20 @@ int main ()
 					}
 					else {
 						// Set the direction of the player
-						if (event.key.code == sf::Keyboard::Right) {
-							player.setDirectionH(Right);
-						} else if (event.key.code == sf::Keyboard::Left) {
-							player.setDirectionH(Left);
-						} else if (event.key.code == sf::Keyboard::Up) {
-							player.setDirectionV(Up);
-						} else if (event.key.code == sf::Keyboard::Down) {
-							player.setDirectionV(Down);
+						switch (event.key.code) {
+							case sf::Keyboard::Right :
+								player.setDirectionH(Right);
+								break;
+							case sf::Keyboard::Left :
+								player.setDirectionH(Left);
+								break;
+							case sf::Keyboard::Up :
+								player.setDirectionV(Up);
+								break;
+							case sf::Keyboard::Down :
+								player.setDirectionV(Down);
+								break;
+							default: break;
 						}
 					}
 					break;
@@ -73,16 +80,15 @@ int main ()
 					// Reset the direction of the player.
 					switch (event.key.code)
 					{
-						case sf::Keyboard::Right : // fall throught
+						case sf::Keyboard::Right : // fall through
 						case sf::Keyboard::Left :
 							player.setDirectionH(NoneH);
 							break;
-						case sf::Keyboard::Up : // fall throught
+						case sf::Keyboard::Up : // fall through
 						case sf::Keyboard::Down :
 							player.setDirectionV(NoneV);
 							break;
-						default :
-							break;
+						default : break;
 					}
 					break;
 					
@@ -93,9 +99,11 @@ int main ()
 
 		//---- UPDATE ----
 		
-		lvl.update(clock.getElapsedTime().asSeconds(), window, player);
+		dt = clock.getElapsedTime().asSeconds();
 		
-		player.update(clock.getElapsedTime().asSeconds(), wDim, lvl.getLength(), lvl.getDepth());
+		lvl.update(dt, window, player);
+		
+		player.update(dt, wDim, lvl.getLength(), lvl.getDepth());
 		
 		hud.update(window, frameTime, player, lvl);
 
@@ -103,9 +111,7 @@ int main ()
 		
 		window.clear(sf::Color::Black);
 		
-		lvl.draw(window, player.getView());
-
-		player.draw(window);
+		lvl.draw(window, player);
 		
 		hud.draw(window);
 		

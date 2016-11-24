@@ -6,14 +6,11 @@
 class CObstacle : public CEntity
 {
 	private :
-		bool m_move;
+		bool m_movable;
 	
 	public :
 		CObstacle();
 		~CObstacle();
-		
-
-		
 };
 
 

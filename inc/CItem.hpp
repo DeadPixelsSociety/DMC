@@ -10,12 +10,9 @@ class CItem : public CEntity
 	public :
 		CItem();
 		~CItem();
-		
-
-		
 };
 
 
 
-#endif
+#endif //__CITEM_HPP
 

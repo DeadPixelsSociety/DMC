@@ -10,7 +10,6 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 
 enum EDirectionHor {Left, Right, NoneH};
 enum EDirectionVer {Up, Down, NoneV};
@@ -32,6 +31,7 @@ class CEntity {
 		CEntity(float weight, sf::Vector2f position, sf::Vector2f size, sf::Color color);
 		~CEntity(void);
 
+		/* Getters and setters. */
 		sf::Vector2f getPosition(void);
 		sf::Vector2f getSize(void);
 		float getWeight(void);
@@ -41,8 +41,9 @@ class CEntity {
 		void  setDirectionH(EDirectionHor newEDirH);
 		void  setDirectionV(EDirectionVer newEDirV);
 		
+		/* Draw the sprite of the entity. */
 		void draw(sf::RenderWindow &window);
-		
+		/* Print the direction of an entity (for debuging). */
 		void printDir();
 };
 

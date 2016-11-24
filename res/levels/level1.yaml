@@ -1,19 +1,21 @@
 name: Test
 
+difficulty: 2
+
 lock: [1500.0]
 
 foe:
     - type: 2
-      spawnPos: {x: 400.0, y: 500.0}
+      spawnPos: {x: 400.0, y: 490.0}
 
     - type: 3
       spawnPos: {x: 200.0, y: 500.0}
 
     - type: 1
-      spawnPos: {x: 600.0, y: 500.0}
+      spawnPos: {x: 600.0, y: 450.0}
 
     - type: 4
-      spawnPos: {x: 1000.0, y: 500.0}
+      spawnPos: {x: 1000.0, y: 435.0}
 
 path: res/sprites/path.png
 
@@ -21,6 +23,8 @@ foreground: res/sprites/foreground.png
 
 background: res/sprites/background.png
 
-depth: 84
+veloFore: 0.35
 
-difficulty: 2
+veloBack: 0.15
+
+depth: 84

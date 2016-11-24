@@ -25,7 +25,7 @@ class CLevel
 		// Keep the x coordonate of zones where we lock the scrolling.
 		std::queue<float> m_lockZones;
 		
-		// Array of foes.
+		// Array of foes within the level.
 		std::vector<CFoe *> m_arrayFoes;
 		
 		// Where the player walk.
@@ -34,9 +34,11 @@ class CLevel
 		// Sprite a the front.
 		sf::Texture *m_pTFore;
 		sf::Sprite m_foreground;
+		float m_veloFore;
 		// Sprite a the back.
 		sf::Texture *m_pTBack;
 		sf::Sprite m_background;
+		float m_veloBack;
 		
 		float m_length;
 		float m_depth;
@@ -50,13 +52,20 @@ class CLevel
 		CLevel(std::string _num);
 		~CLevel(void);
 		
+		/* Getters and setters */
 		float getLength(void);
 		float getDepth(void);
 		std::queue<float> getLockZones(void);
-		void  foesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, std::vector<size_t> *foesVisibles);
 		
+		/* Fill a vector with indexs of all the foes visibled in the view. */
+		void  foesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, std::vector<size_t> *foesVisibles);
+		/* Slice the visibles foes if they are in front of the player of behind him. */
+		void  foesInOrder(float playerPosY, std::vector<size_t> *foesVisibles, std::vector<size_t> *foesFront, std::vector<size_t> *foesBack);
+		
+		/* Update entity present in the level. */
 		void  update(float dt, sf::RenderWindow &window, CPlayer &player);
-		void  draw(sf::RenderWindow &window, sf::View viewPlayer);
+		/* Draw all the drawable entitys inside the level. */
+		void  draw(sf::RenderWindow &window, CPlayer &player);
 	
 	private:
 };
