@@ -1,6 +1,8 @@
 #include "../inc/CLevel.hpp"
 
-CLevel::CLevel(std::string _num)
+CLevel::CLevel(std::string _num, sf::Vector2f wDim)
+: m_viewFore(sf::FloatRect(0, 0, wDim.x, wDim.y))
+, m_viewBack(sf::FloatRect(0, 0, wDim.x, wDim.y))
 {
 	// Build the path of the yaml file of the current level.
 	std::string name("res/levels/level");
@@ -140,7 +142,7 @@ void CLevel::foesInOrder(float playerPosY, std::vector<size_t> *foesVisibles, st
 	}
 }
 
-void CLevel::update(float dt, sf::RenderWindow &window, CPlayer &player)
+void CLevel::update(sf::Time dt, sf::RenderWindow &window, CPlayer &player)
 {
 	// Update entity present in the level.
 	
@@ -179,15 +181,14 @@ void CLevel::draw(sf::RenderWindow &window, CPlayer &player)
 {
 	// Draw all the drawable entitys inside the level.
 	
-	// Drawing of the 3 sprites of the level with parallaxe effect.
-	sf::View viewParallaxe(sf::FloatRect(0, 0, window.getSize().x, window.getSize().y));
-	
-	viewParallaxe.move(player.getViewPos().x * m_veloBack, 0);
-	window.setView(viewParallaxe);
+	// Drawing of the 3 sprites of the level with parallaxe effect.	
+	if (player.getLastViewDep() > 0.0f) m_viewBack.move(player.getLastViewDep() * m_veloBack, 0);
+	else m_viewBack.move(m_veloBack, 0);
+	window.setView(m_viewBack);
 	window.draw(m_background);
 	
-	viewParallaxe.move(player.getViewPos().x * m_veloFore, 0);
-	window.setView(viewParallaxe);
+	m_viewFore.move(player.getLastViewDep() * m_veloFore, 0);
+	window.setView(m_viewFore);
 	window.draw(m_foreground);
 
 	// Reset the view to default so the path sprite

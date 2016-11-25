@@ -14,32 +14,30 @@
 	
 	[PAUL] - CLevel entierement fini ?
 		   - Musique.
+		   - Beurk -> player m_lastViewDep.
 
 --- TOUTDOUX ---
 */
 
 int main ()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Pouet");
-	window.setFramerateLimit(61);
+	sf::RenderWindow window(sf::VideoMode(800, 600), "Pouet");	
+	window.setFramerateLimit(60);
 	
 	float wWidth = window.getSize().x;
 	float wHeight = window.getSize().y;
 	sf::Vector2f wDim(wWidth, wHeight);
 
-	CLevel lvl("1");
+	CLevel lvl("1", wDim);
 	
 	CPlayer player(wDim, "Pouet");
 	
 	CHud hud("res/fonts/Hack-Regular.ttf", 15, sf::Vector2f(5, 5));
 	
 	sf::Clock clock;
-	sf::Time frameTime;
-	float dt;
+	sf::Time deltaTime = sf::Time::Zero;
 	while (window.isOpen())
-	{
-		frameTime = clock.restart();
-	
+	{	
 		//---- EVENT ----
 	
 		sf::Event event;
@@ -51,42 +49,14 @@ int main ()
 					window.close();
 					break;
 					
-				case sf::Event::KeyPressed :		
-					if (event.key.code == sf::Keyboard::Escape)
-					{
-						window.close();
-					}
-					else {
-						// Set the direction of the player
-						switch (event.key.code) {
-							case sf::Keyboard::Right :
-								player.setDirectionH(Right);
-								break;
-							case sf::Keyboard::Left :
-								player.setDirectionH(Left);
-								break;
-							case sf::Keyboard::Up :
-								player.setDirectionV(Up);
-								break;
-							case sf::Keyboard::Down :
-								player.setDirectionV(Down);
-								break;
-							default: break;
-						}
-					}
-					break;
-						
-				case sf::Event::KeyReleased :
-					// Reset the direction of the player.
+				case sf::Event::KeyPressed :
 					switch (event.key.code)
 					{
-						case sf::Keyboard::Right : // fall through
-						case sf::Keyboard::Left :
-							player.setDirectionH(NoneH);
-							break;
-						case sf::Keyboard::Up : // fall through
-						case sf::Keyboard::Down :
-							player.setDirectionV(NoneV);
+					 	case sf::Keyboard::Escape :
+					 		window.close();
+					 		break;
+					 	case sf::Keyboard::T :
+							hud.toggle();
 							break;
 						default : break;
 					}
@@ -97,15 +67,25 @@ int main ()
 			}
 		}
 
+		// Set the direction of the player
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			player.setDirectionH(Right);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			player.setDirectionH(Left);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+			player.setDirectionV(Up);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+			player.setDirectionV(Down);
+
 		//---- UPDATE ----
 		
-		dt = clock.getElapsedTime().asSeconds();
-		
-		lvl.update(dt, window, player);
-		
-		player.update(dt, wDim, lvl.getLength(), lvl.getDepth());
-		
-		hud.update(window, frameTime, player, lvl);
+		deltaTime = clock.restart();
+
+		lvl.update(deltaTime, window, player);
+	
+		player.update(deltaTime, wDim, lvl.getLength(), lvl.getDepth());
+	
+		hud.update(deltaTime, window, player, lvl);
 
 		//---- DRAWING ----
 		

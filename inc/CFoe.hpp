@@ -15,7 +15,7 @@ class CFoe : public CCharacter
 		CFoe(float type, float psX, float psY);
 		~CFoe();
 		
-		void update(float dt, float limit);		
+		void update(sf::Time dt, float limit);		
 };
 
 #endif //__CFOE_HPP

@@ -1,6 +1,8 @@
 #ifndef __CHUD_HPP
 #define __CHUD_HPP
 
+#include <stdbool.h>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Font.hpp>
@@ -14,11 +16,15 @@ class CHud
 	
 		sf::Font m_font;
 		sf::Text m_text;
+		bool m_visible;
 	
 	public :
 	
 		CHud(std::string fontPath, float charSize, sf::Vector2f posText);
 		~CHud();
+		
+		/* Indicate if the hud is visible or not. */
+		void toggle();
 		
 		/* Print the fps of the game. */
 		std::string printFps(sf::Time frameTime);
@@ -30,7 +36,7 @@ class CHud
 		std::string printNextLockZone(std::queue<float> lockZones);
 		
 		/* Update the the informations to display. */
-		void update(sf::RenderWindow &window, sf::Time frameTime, CPlayer &player, CLevel &lvl);
+		void update(sf::Time frameTime, sf::RenderWindow &window, CPlayer &player, CLevel &lvl);
 		/* Display the informations to the screen. */
 		void draw(sf::RenderWindow &window);
 };

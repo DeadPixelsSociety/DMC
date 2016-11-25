@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-Wall -std=c++11
+CFLAGS=-Wall -g -std=c++11
 
 SRC=$(wildcard src/*.cpp)
 OBJ=$(addprefix obj/, $(notdir $(SRC:.cpp=.o)))
@@ -7,7 +7,7 @@ OBJ=$(addprefix obj/, $(notdir $(SRC:.cpp=.o)))
 LIBSFML=-lsfml-graphics -lsfml-window -lsfml-system
 LIBYAML=-lyaml-cpp
 
-VALFLAGS=--leak-check=full
+VALFLAGS=--leak-check=full --show-leak-kinds=all
 
 TARGET=app
 
@@ -31,8 +31,5 @@ obj:
 l: ${TARGET}
 	@./${TARGET}
 
-v: debugVal ${TARGET}
+v: ${TARGET}
 	@valgrind ${VALFLAGS} ./${TARGET}
-
-debugVal:
-	$(eval CFLAGS += -g)

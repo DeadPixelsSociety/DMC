@@ -1,6 +1,7 @@
 #include "../inc/CHud.hpp"
 
 CHud::CHud(std::string fontPath, float charSize, sf::Vector2f posText)
+: m_visible(true)
 {
 	if (!m_font.loadFromFile(fontPath))
 	{
@@ -17,6 +18,13 @@ CHud::CHud(std::string fontPath, float charSize, sf::Vector2f posText)
 CHud::~CHud()
 {
 
+}
+
+void CHud::toggle()
+{
+	// Indicate if the hud is visible or not.
+	
+	m_visible = !m_visible;
 }
 
 std::string CHud::printFps(sf::Time frameTime)
@@ -57,9 +65,11 @@ std::string CHud::printNextLockZone(std::queue<float> lockZones)
 	return "Next Lock Zone : " + lockZone;
 }
 
-void CHud::update(sf::RenderWindow &window, sf::Time frameTime, CPlayer &player, CLevel &lvl)
+void CHud::update(sf::Time frameTime, sf::RenderWindow &window, CPlayer &player, CLevel &lvl)
 {
 	// Update the the informations to display.
+	
+	if (!m_visible) return;
 	
 	m_text.setPosition(player.getView().getCenter().x - window.getSize().x / 2 + 5, player.getView().getCenter().y - window.getSize().y / 2 + 5);
 	m_text.setString(printFps(frameTime)
@@ -72,5 +82,5 @@ void CHud::draw(sf::RenderWindow &window)
 {
 	// Display the informations to the screen.
 	
-	window.draw(m_text);
+	if (m_visible) window.draw(m_text);
 }

@@ -66,11 +66,25 @@ sf::Vector2f CEntity::getSize(void)
 	return m_size;
 }
 
+enum EDirectionHor CEntity::getDirectionH()
+{
+	// Getter for the horizontal direction.
+	
+	return m_eDirH;
+}
+
 void CEntity::setDirectionH(EDirectionHor newEDirH)
 {
 	// Setter for the horizontal direction.
 	
 	m_eDirH = newEDirH;
+}
+
+enum EDirectionVer CEntity::getDirectionV()
+{
+	// Getter for the vertical direction.
+	
+	return m_eDirV;
 }
 
 void CEntity::setDirectionV(EDirectionVer newEDirV)

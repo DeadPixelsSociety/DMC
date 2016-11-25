@@ -34,11 +34,13 @@ class CLevel
 		// Sprite a the front.
 		sf::Texture *m_pTFore;
 		sf::Sprite m_foreground;
+		sf::View m_viewFore;
 		float m_veloFore;
 		// Sprite a the back.
 		sf::Texture *m_pTBack;
 		sf::Sprite m_background;
 		float m_veloBack;
+		sf::View m_viewBack;
 		
 		float m_length;
 		float m_depth;
@@ -49,7 +51,7 @@ class CLevel
 		
 	public:
 	
-		CLevel(std::string _num);
+		CLevel(std::string _num, sf::Vector2f wDim);
 		~CLevel(void);
 		
 		/* Getters and setters */
@@ -63,7 +65,7 @@ class CLevel
 		void  foesInOrder(float playerPosY, std::vector<size_t> *foesVisibles, std::vector<size_t> *foesFront, std::vector<size_t> *foesBack);
 		
 		/* Update entity present in the level. */
-		void  update(float dt, sf::RenderWindow &window, CPlayer &player);
+		void  update(sf::Time dt, sf::RenderWindow &window, CPlayer &player);
 		/* Draw all the drawable entitys inside the level. */
 		void  draw(sf::RenderWindow &window, CPlayer &player);
 	

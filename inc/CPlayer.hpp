@@ -13,6 +13,8 @@ class CPlayer : public CCharacter
 		sf::View m_view;
 		
 		bool m_isBlocked;
+		
+		float m_lastViewDep;
 
 	public :
 		CPlayer(sf::Vector2f wDim, std::string name);
@@ -23,11 +25,12 @@ class CPlayer : public CCharacter
 		sf::Vector2f getViewPos(void);
 		bool getIsBlocked(void);
 		void setIsBlocked(bool newBlocked);
+		float getLastViewDep();
 		
 		/* Update the view the player with his movement. */
 		void updateView(float x, float y, sf::Vector2f wDim, float lvlLength);
 		/* Update the action of the player limited by the view. */
-		void update(float dt, sf::Vector2f wDim, float lvlLength, float lvlDepth);
+		void update(sf::Time dt, sf::Vector2f wDim, float lvlLength, float lvlDepth);
 };
 
 #endif //__CPLAYER_HPP

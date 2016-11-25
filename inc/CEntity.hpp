@@ -38,7 +38,9 @@ class CEntity {
 		void  setPosition(sf::Vector2f newPos);
 		void  setPosition(float x, float y);
 		void  setWeight(float newWeight);
+		enum EDirectionHor getDirectionH();
 		void  setDirectionH(EDirectionHor newEDirH);
+		enum EDirectionVer getDirectionV();
 		void  setDirectionV(EDirectionVer newEDirV);
 		
 		/* Draw the sprite of the entity. */
