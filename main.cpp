@@ -15,9 +15,70 @@
 	[PAUL] - CLevel entierement fini ?
 		   - Musique.
 		   - Beurk -> player m_lastViewDep.
+		   - Possible simplifier reset direction player
+		     ou besoins de l'info pour foes ou autre ?
 
 --- TOUTDOUX ---
 */
+
+void processEvent(sf::Event event, sf::RenderWindow &window, CPlayer &player, CHud &hud)
+{
+	while (window.pollEvent(event))
+	{		
+		switch (event.type)
+		{
+			case sf::Event::Closed :		
+				window.close();
+				break;
+				
+			case sf::Event::KeyPressed :
+				switch (event.key.code)
+				{
+				 	case sf::Keyboard::Escape :
+				 		window.close();
+				 		break;
+				 	case sf::Keyboard::T :
+						hud.toggle();
+						break;
+					default : break;
+				}
+				break;
+			
+			case sf::Event::KeyReleased :
+				// Reset the direction of the player
+				switch (event.key.code)
+				{
+				 	case sf::Keyboard::Right :
+				 	case sf::Keyboard::D :
+				 	case sf::Keyboard::Left :
+				 	case sf::Keyboard::Q :
+				 		player.setDirectionH(NoneH);
+				 		break;
+				 	case sf::Keyboard::Up :
+				 	case sf::Keyboard::Z :
+				 	case sf::Keyboard::Down :
+				 	case sf::Keyboard::S :
+				 		player.setDirectionV(NoneV);
+				 		break;
+					default : break;
+				}
+				break;
+			default :
+				break;
+		}
+	}
+
+	// Set the direction of the player.
+	// Better reactivity with isKeyPressed()
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		player.setDirectionH(Right);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+		player.setDirectionH(Left);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+		player.setDirectionV(Up);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		player.setDirectionV(Down);
+}
 
 int main ()
 {
@@ -36,46 +97,13 @@ int main ()
 	
 	sf::Clock clock;
 	sf::Time deltaTime = sf::Time::Zero;
+	
+	sf::Event event;
 	while (window.isOpen())
 	{	
 		//---- EVENT ----
-	
-		sf::Event event;
-		while (window.pollEvent(event))
-		{		
-			switch (event.type)
-			{
-				case sf::Event::Closed :		
-					window.close();
-					break;
-					
-				case sf::Event::KeyPressed :
-					switch (event.key.code)
-					{
-					 	case sf::Keyboard::Escape :
-					 		window.close();
-					 		break;
-					 	case sf::Keyboard::T :
-							hud.toggle();
-							break;
-						default : break;
-					}
-					break;
-					
-				default :
-					break;
-			}
-		}
 
-		// Set the direction of the player
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-			player.setDirectionH(Right);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-			player.setDirectionH(Left);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-			player.setDirectionV(Up);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-			player.setDirectionV(Down);
+		processEvent(event, window, player, hud);
 
 		//---- UPDATE ----
 		

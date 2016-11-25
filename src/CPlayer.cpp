@@ -121,10 +121,6 @@ void CPlayer::update(sf::Time dt, sf::Vector2f wDim, float lvlLength, float lvlD
 	
 	if (x == 0.0f && y == 0.0f) return;
 	
-	// Reset the direction of the player.
-	setDirectionH(NoneH);
-	setDirectionV(NoneV);
-	
 	if (!m_isBlocked) updateView(x, y, wDim, lvlLength);
 	
 	m_sprite.move(x, y);

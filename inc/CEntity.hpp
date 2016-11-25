@@ -45,8 +45,6 @@ class CEntity {
 		
 		/* Draw the sprite of the entity. */
 		void draw(sf::RenderWindow &window);
-		/* Print the direction of an entity (for debuging). */
-		void printDir();
 };
 
 #endif //__CENTITY_HPP

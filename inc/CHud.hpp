@@ -8,6 +8,7 @@
 #include <SFML/Graphics/Font.hpp>
 
 #include "CLevel.hpp"
+#include "CEntity.hpp"
 #include "CPlayer.hpp"
 
 class CHud
@@ -34,6 +35,8 @@ class CHud
 		std::string printNbrFoesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, CLevel &lvl);
 		/* Print the x coordonate of the next lock zone. */
 		std::string printNextLockZone(std::queue<float> lockZones);
+		/* Print the direction of an entity. */
+		std::string printDirection(CEntity &entity);
 		
 		/* Update the the informations to display. */
 		void update(sf::Time frameTime, sf::RenderWindow &window, CPlayer &player, CLevel &lvl);

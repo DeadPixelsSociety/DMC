@@ -100,30 +100,3 @@ void CEntity::draw(sf::RenderWindow &window)
 	
 	window.draw(m_sprite);
 }
-
-void CEntity::printDir()
-{
-	// Print the direction of an entity (for debuging).
-	
-	std::string direction;
-	
-	switch (m_eDirH)
-	{
-		case Right : direction += "[Right - ";
-			break;
-		case Left : direction += "[Left - ";
-			break;
-		case NoneH : direction += "[NoneH - ";
-	}
-	
-	switch (m_eDirV)
-	{
-		case Up : direction += "Up]";
-			break;
-		case Down : direction += "Down]";
-			break;
-		case NoneV : direction += "NoneV]";
-	}
-
-	std::cout << direction << std::endl;
-}

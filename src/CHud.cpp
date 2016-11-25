@@ -65,6 +65,33 @@ std::string CHud::printNextLockZone(std::queue<float> lockZones)
 	return "Next Lock Zone : " + lockZone;
 }
 
+std::string CHud::printDirection(CEntity &entity)
+{
+	// Print the direction of an entity.
+	
+	std::string direction;
+	
+	switch (entity.getDirectionH())
+	{
+		case Right : direction += "[Right - ";
+			break;
+		case Left : direction += "[Left - ";
+			break;
+		case NoneH : direction += "[NoneH - ";
+	}
+	
+	switch (entity.getDirectionV())
+	{
+		case Up : direction += "Up]";
+			break;
+		case Down : direction += "Down]";
+			break;
+		case NoneV : direction += "NoneV]";
+	}
+
+	return "Direction : " + direction;
+}
+
 void CHud::update(sf::Time frameTime, sf::RenderWindow &window, CPlayer &player, CLevel &lvl)
 {
 	// Update the the informations to display.
@@ -75,7 +102,8 @@ void CHud::update(sf::Time frameTime, sf::RenderWindow &window, CPlayer &player,
 	m_text.setString(printFps(frameTime)
 					 + " | " + printNbrFoesInScreen(window.getSize(), player.getView().getCenter(), lvl)
 					 + " | " + printNextLockZone(lvl.getLockZones())
-					 + " | " + printPosition(player));
+					 + " | " + printPosition(player)
+					 + "\n" + printDirection(player));
 }
 
 void CHud::draw(sf::RenderWindow &window)
