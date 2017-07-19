@@ -92,6 +92,16 @@ std::string CHud::printDirection(CEntity &entity)
 	return "Direction : " + direction;
 }
 
+std::string CHud::printDist(CPlayer &player)
+{
+	// Print the distance between the x of the center of the view and the x of the center of the player.
+	
+	float coordX = player.getPosition().x + player.getSize().x / 2;
+	int dist = (int) abs(coordX - player.getView().getCenter().x);
+	
+	return "Dist : " + std::to_string(dist);
+}
+
 void CHud::update(sf::Time frameTime, sf::RenderWindow &window, CPlayer &player, CLevel &lvl)
 {
 	// Update the the informations to display.
@@ -102,8 +112,9 @@ void CHud::update(sf::Time frameTime, sf::RenderWindow &window, CPlayer &player,
 	m_text.setString(printFps(frameTime)
 					 + " | " + printNbrFoesInScreen(window.getSize(), player.getView().getCenter(), lvl)
 					 + " | " + printNextLockZone(lvl.getLockZones())
-					 + " | " + printPosition(player)
-					 + "\n" + printDirection(player));
+					 + "\n" + printPosition(player)
+					 + " | " + printDirection(player)
+					 + "\n" + printDist(player));
 }
 
 void CHud::draw(sf::RenderWindow &window)

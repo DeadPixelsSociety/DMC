@@ -11,6 +11,8 @@
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/Color.hpp>
 
+#include "CAnimationHandler.hpp"
+
 enum EDirectionHor {Left, Right, NoneH};
 enum EDirectionVer {Up, Down, NoneV};
 
@@ -22,9 +24,9 @@ class CEntity {
 		EDirectionVer m_eDirV;
 		bool m_isSpawned;
 		
-		sf::Vector2f m_size;		
-		sf::Texture *m_pText;
-		sf::Sprite m_sprite;
+		sf::Vector2f m_size;
+		
+		CAnimationHandler *m_animHandler;
 
 	public : 
 		CEntity(float weight, sf::Vector2f position, sf::Vector2f size, std::string spritePath);
@@ -32,6 +34,7 @@ class CEntity {
 		~CEntity(void);
 
 		/* Getters and setters. */
+		sf::Sprite *getSprite(void);
 		sf::Vector2f getPosition(void);
 		sf::Vector2f getSize(void);
 		float getWeight(void);

@@ -7,13 +7,16 @@ OBJ=$(addprefix obj/, $(notdir $(SRC:.cpp=.o)))
 LIBSFML=-lsfml-graphics -lsfml-window -lsfml-system
 LIBYAML=-lyaml-cpp
 
-VALFLAGS=--leak-check=full --show-leak-kinds=all
+VALFLAGS=--leak-check=full --track-origins=yes
 
 TARGET=app
 
 all: obj ${TARGET}
 
 obj/%.o: src/%.cpp
+	${CC} ${CFLAGS} -c -o $@ $<
+
+obj/CAnimationHandler.o: src/CAnimationHandler.cpp obj/CMovement.o
 	${CC} ${CFLAGS} -c -o $@ $<
 
 ${TARGET}: main.cpp ${OBJ}

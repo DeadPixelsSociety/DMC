@@ -115,14 +115,12 @@ void CLevel::foesInScreen(sf::Vector2u wDim, sf::Vector2f centerView, std::vecto
 	
 	// We keep indexs of foes in the view.
 	size_t size = m_arrayFoes.size();
-	for (size_t foe = 0; foe < size; ++foe)
-	{
+	for (size_t foe = 0; foe < size; ++foe)	{
 		rightCorner = m_arrayFoes[foe]->getPosition().x + m_arrayFoes[foe]->getSize().x;
 		leftCorner = m_arrayFoes[foe]->getPosition().x;
 		
-		if ((rightCorner > xPosLeftView && rightCorner < xPosRightView) ||
-			(leftCorner > xPosLeftView && leftCorner < xPosRightView))
-		{
+		if ((rightCorner >= xPosLeftView && rightCorner <= xPosRightView) ||
+        (leftCorner >= xPosLeftView && leftCorner <= xPosRightView))  {
 			foesVisibles->push_back(foe);
 		}
 	}
@@ -132,8 +130,7 @@ void CLevel::foesInOrder(float playerPosY, std::vector<size_t> *foesVisibles, st
 {
 	// Slice the visibles foes if they are in front of the player of behind him.
 	
-	for (auto index : *foesVisibles)
-	{
+	for (auto index : *foesVisibles) {
 		if ((m_arrayFoes[index]->getPosition().y + m_arrayFoes[index]->getSize().y) > playerPosY) {
 			foesFront->push_back(index);
 		} else {
@@ -146,8 +143,7 @@ void CLevel::update(sf::Time dt, sf::RenderWindow &window, CPlayer &player)
 {
 	// Update entity present in the level.
 	
-	if (!m_lockZones.empty() || player.getIsBlocked())
-	{
+	if (!m_lockZones.empty() || player.getIsBlocked()) {
 		// The player is in a lock zone,
 		// we check if there are foes in the view,
 		// if not, we disable the lock zone.
@@ -160,19 +156,18 @@ void CLevel::update(sf::Time dt, sf::RenderWindow &window, CPlayer &player)
 			}
 		}
 		// We block the player when he enter a lock zone.
-		else
-		{
-			if (player.getPosition().x >= m_lockZones.front())
-			{
+		else {
+			if (player.getPosition().x >= m_lockZones.front()) {
 				player.setIsBlocked(true);
 				m_lockZones.pop();
 			}
 		}
 	}
 	
+	player.update(dt, window.getSize(), getLength(), getDepth());
+	
 	// Tmp update for the foes.
-	for (auto foe : m_arrayFoes)
-	{
+	for (auto foe : m_arrayFoes) {
 		foe->update(dt, getLength());
 	}
 }
@@ -205,15 +200,13 @@ void CLevel::draw(sf::RenderWindow &window, CPlayer &player)
 	std::vector<size_t> foesBack;
 	foesInOrder(player.getPosition().y + player.getSize().y, &foesVisibles, &foesFront, &foesBack);
 	
-	for (auto index : foesBack)
-	{
+	for (auto index : foesBack) {
 		m_arrayFoes[index]->draw(window);
 	}
 	
 	player.draw(window);
 	
-	for (auto index : foesFront)
-	{
+	for (auto index : foesFront) {
 		m_arrayFoes[index]->draw(window);
 	}
 }

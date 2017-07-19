@@ -28,9 +28,9 @@ class CPlayer : public CCharacter
 		float getLastViewDep();
 		
 		/* Update the view the player with his movement. */
-		void updateView(float x, float y, sf::Vector2f wDim, float lvlLength);
+		void updateView(float x, float y, sf::Vector2u wDim, float lvlLength);
 		/* Update the action of the player limited by the view. */
-		void update(sf::Time dt, sf::Vector2f wDim, float lvlLength, float lvlDepth);
+		void update(sf::Time dt, sf::Vector2u wDim, float lvlLength, float lvlDepth);
 };
 
 #endif //__CPLAYER_HPP

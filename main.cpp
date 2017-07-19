@@ -12,7 +12,8 @@
 
 	[JEREMY] - Implementer le saut.
 	
-	[PAUL] - CLevel entierement fini ?
+	[PAUL] - Fix le bupbup
+		   - CLevel entierement fini ?
 		   - Musique.
 		   - Beurk -> player m_lastViewDep.
 		   - Possible simplifier reset direction player
@@ -88,11 +89,10 @@ int main ()
 	float wWidth = window.getSize().x;
 	float wHeight = window.getSize().y;
 	sf::Vector2f wDim(wWidth, wHeight);
-
-	CLevel lvl("1", wDim);
 	
 	CPlayer player(wDim, "Pouet");
 	
+	CLevel lvl("1", wDim);
 	CHud hud("res/fonts/Hack-Regular.ttf", 15, sf::Vector2f(5, 5));
 	
 	sf::Clock clock;
@@ -101,6 +101,8 @@ int main ()
 	sf::Event event;
 	while (window.isOpen())
 	{	
+		//std::cout << player.getView().getCenter().x << " - " << player.getView().getCenter().y << std::endl;
+	
 		//---- EVENT ----
 
 		processEvent(event, window, player, hud);
@@ -111,13 +113,11 @@ int main ()
 
 		lvl.update(deltaTime, window, player);
 	
-		player.update(deltaTime, wDim, lvl.getLength(), lvl.getDepth());
-	
 		hud.update(deltaTime, window, player, lvl);
 
 		//---- DRAWING ----
 		
-		window.clear(sf::Color::Black);
+		window.clear();
 		
 		lvl.draw(window, player);
 		

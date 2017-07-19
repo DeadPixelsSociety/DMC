@@ -6,16 +6,16 @@ lock: [1500.0]
 
 foe:
     - type: 2
-      spawnPos: {x: 400.0, y: 490.0}
+      spawnPos: {x: 400.0, y: 560.0}
 
     - type: 3
-      spawnPos: {x: 200.0, y: 500.0}
+      spawnPos: {x: 200.0, y: 540.0}
 
     - type: 1
-      spawnPos: {x: 600.0, y: 450.0}
+      spawnPos: {x: 600.0, y: 500.0}
 
     - type: 4
-      spawnPos: {x: 1000.0, y: 435.0}
+      spawnPos: {x: 1000.0, y: 490.0}
 
 path: res/sprites/path.png
 

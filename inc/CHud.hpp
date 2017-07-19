@@ -37,6 +37,8 @@ class CHud
 		std::string printNextLockZone(std::queue<float> lockZones);
 		/* Print the direction of an entity. */
 		std::string printDirection(CEntity &entity);
+		/* Print the distance between the x of the center of the view and the x of the center of the player. */
+		std::string printDist(CPlayer &player);
 		
 		/* Update the the informations to display. */
 		void update(sf::Time frameTime, sf::RenderWindow &window, CPlayer &player, CLevel &lvl);
