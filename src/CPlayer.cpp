@@ -104,9 +104,16 @@ void CPlayer::update(sf::Time dt, sf::Vector2u wDim, float lvlLength, float lvlD
 	
 	m_lastViewDep = 0.0f;
 
+  switch (m_eAction)
+  {
+    case ACT_JUMP : break;
+    case ACT_ATTACK : break;
+    case ACT_NONE : break;
+  }
+
 	switch (m_eDirH)
 	{
-		case Right :
+		case DIR_RIGHT :
 		  m_animHandler->update(dt, MOV_RIGHT);
 		  // Block the player to the right extremity of the view.
 		  h_limit = getView().getCenter().x + (wDim.x / 2);
@@ -114,7 +121,7 @@ void CPlayer::update(sf::Time dt, sf::Vector2u wDim, float lvlLength, float lvlD
 		    x = m_velocity * dt.asSeconds();
 		  }
 			break;
-		case Left :
+		case DIR_LEFT :
       m_animHandler->update(dt, MOV_LEFT);
 		  // Block the player to the left extremity of the view.
 		  h_limit = getView().getCenter().x - (wDim.x / 2);
@@ -122,26 +129,26 @@ void CPlayer::update(sf::Time dt, sf::Vector2u wDim, float lvlLength, float lvlD
 		    x = -m_velocity * dt.asSeconds();
 		  }
 			break;
-		case NoneH : break;
+		case DIR_NONEH : break;
 	}
 	
 	switch (m_eDirV)
 	{
-		case Up :
+		case DIR_UP :
 		  // Block the player to the top extremity of the path.
 		  v_limit = wDim.y - lvlDepth - getSize().y;
 		  if (getPosition().y > v_limit) {
 		    y = -m_velocity * dt.asSeconds();
 		  }
 			break;
-		case Down :
+		case DIR_DOWN :
 		  // Block the player to the bottom extremity of the path.
 		  v_limit = wDim.y - getSize().y;
 		  if (getPosition().y < v_limit) {
 		    y = m_velocity * dt.asSeconds();
 		  }
 			break;
-		case NoneV : break;
+		case DIR_NONEV : break;
 	}
 	
 	

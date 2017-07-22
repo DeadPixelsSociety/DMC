@@ -3,8 +3,7 @@
 CHud::CHud(std::string fontPath, float charSize, sf::Vector2f posText)
 : m_visible(true)
 {
-	if (!m_font.loadFromFile(fontPath))
-	{
+	if (!m_font.loadFromFile(fontPath))	{
 		std::cerr << "[!] Can't load the font." << std::endl;
 	}
 	
@@ -57,8 +56,7 @@ std::string CHud::printNextLockZone(std::queue<float> lockZones)
 	
 	std::string lockZone("None");
 	
-	if (!lockZones.empty())
-	{
+	if (!lockZones.empty()) {
 		lockZone = std::to_string((int) lockZones.front());
 	}
 	
@@ -73,23 +71,53 @@ std::string CHud::printDirection(CEntity &entity)
 	
 	switch (entity.getDirectionH())
 	{
-		case Right : direction += "[Right - ";
+		case DIR_RIGHT :
+      direction = "[Right - ";
 			break;
-		case Left : direction += "[Left - ";
+		case DIR_LEFT :
+      direction = "[Left - ";
 			break;
-		case NoneH : direction += "[NoneH - ";
+		case DIR_NONEH :
+      direction = "[NoneH - ";
+      break;
 	}
 	
 	switch (entity.getDirectionV())
 	{
-		case Up : direction += "Up]";
+		case DIR_UP :
+      direction += "Up]";
 			break;
-		case Down : direction += "Down]";
+		case DIR_DOWN :
+      direction += "Down]";
 			break;
-		case NoneV : direction += "NoneV]";
+		case DIR_NONEV :
+      direction += "NoneV]";
+      break;
 	}
 
 	return "Direction : " + direction;
+}
+
+std::string CHud::printAction(CEntity &entity)
+{
+  // Print the action of an entity
+  
+  std::string action;
+  
+  switch (entity.getAction())
+  {
+    case ACT_JUMP :
+      action = "[Jump]";
+      break;
+    case ACT_ATTACK :
+      action = "[Attack]";
+      break;
+    case ACT_NONE :
+      action = "[None]";
+      break;
+  }
+  
+  return "Action : " + action;
 }
 
 std::string CHud::printDist(CPlayer &player)
@@ -113,8 +141,9 @@ void CHud::update(sf::Time frameTime, sf::RenderWindow &window, CPlayer &player,
 					 + " | " + printNbrFoesInScreen(window.getSize(), player.getView().getCenter(), lvl)
 					 + " | " + printNextLockZone(lvl.getLockZones())
 					 + "\n" + printPosition(player)
-					 + " | " + printDirection(player)
-					 + "\n" + printDist(player));
+					 + " | " + printDist(player)
+					 + "\n" + printDirection(player)
+					 + " | " + printAction(player));
 }
 
 void CHud::draw(sf::RenderWindow &window)

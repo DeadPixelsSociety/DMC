@@ -46,21 +46,27 @@ void processEvent(sf::Event event, sf::RenderWindow &window, CPlayer &player, CH
 				break;
 			
 			case sf::Event::KeyReleased :
-				// Reset the direction of the player
+				// Reset the direction or action of the player
 				switch (event.key.code)
 				{
 				 	case sf::Keyboard::Right :
 				 	case sf::Keyboard::D :
 				 	case sf::Keyboard::Left :
 				 	case sf::Keyboard::Q :
-				 		player.setDirectionH(NoneH);
+				 		player.setDirectionH(DIR_NONEH);
 				 		break;
 				 	case sf::Keyboard::Up :
 				 	case sf::Keyboard::Z :
 				 	case sf::Keyboard::Down :
 				 	case sf::Keyboard::S :
-				 		player.setDirectionV(NoneV);
+				 		player.setDirectionV(DIR_NONEV);
 				 		break;
+				 	case sf::Keyboard::Space :
+				 	case sf::Keyboard::Slash :
+				 	case sf::Keyboard::G :
+				 	case sf::Keyboard::RControl :				 	
+				 	  player.setAction(ACT_NONE);
+				 	  break;
 					default : break;
 				}
 				break;
@@ -72,18 +78,22 @@ void processEvent(sf::Event event, sf::RenderWindow &window, CPlayer &player, CH
 	// Set the direction of the player.
 	// Better reactivity with isKeyPressed()
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		player.setDirectionH(Right);
+		player.setDirectionH(DIR_RIGHT);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-		player.setDirectionH(Left);
+		player.setDirectionH(DIR_LEFT);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-		player.setDirectionV(Up);
+		player.setDirectionV(DIR_UP);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		player.setDirectionV(Down);
+		player.setDirectionV(DIR_DOWN);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::Slash))
+		player.setAction(ACT_JUMP);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::G) || sf::Keyboard::isKeyPressed(sf::Keyboard::RControl))
+		player.setAction(ACT_ATTACK);
 }
 
 int main ()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Pouet");	
+	sf::RenderWindow window(sf::VideoMode(800, 600), "DMC");	
 	window.setFramerateLimit(60);
 	
 	float wWidth = window.getSize().x;

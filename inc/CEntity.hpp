@@ -13,16 +13,17 @@
 
 #include "CAnimationHandler.hpp"
 
-enum EDirectionHor {Left, Right, NoneH};
-enum EDirectionVer {Up, Down, NoneV};
+enum EAction {ACT_JUMP, ACT_ATTACK, ACT_NONE};
+enum EDirectionHor {DIR_LEFT, DIR_RIGHT, DIR_NONEH};
+enum EDirectionVer {DIR_UP, DIR_DOWN, DIR_NONEV};
 
 class CEntity {
 	protected :
 		
 		float m_weight;
+		EAction m_eAction;
 		EDirectionHor m_eDirH;
 		EDirectionVer m_eDirV;
-		bool m_isSpawned;
 		
 		sf::Vector2f m_size;
 		
@@ -41,9 +42,11 @@ class CEntity {
 		void  setPosition(sf::Vector2f newPos);
 		void  setPosition(float x, float y);
 		void  setWeight(float newWeight);
-		enum EDirectionHor getDirectionH();
+		enum EAction getAction(void);
+		void setAction(EAction action);
+		enum EDirectionHor getDirectionH(void);
 		void  setDirectionH(EDirectionHor newEDirH);
-		enum EDirectionVer getDirectionV();
+		enum EDirectionVer getDirectionV(void);
 		void  setDirectionV(EDirectionVer newEDirV);
 		
 		/* Draw the sprite of the entity. */

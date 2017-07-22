@@ -35,4 +35,4 @@ l: ${TARGET}
 	@./${TARGET}
 
 v: ${TARGET}
-	@valgrind ${VALFLAGS} ./${TARGET}
+	@valgrind ${VALFLAGS}./${TARGET} > tmp.log 2>&1

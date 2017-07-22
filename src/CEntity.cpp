@@ -2,9 +2,9 @@
 
 CEntity::CEntity(float weight, sf::Vector2f position, sf::Vector2f size, std::string spritePath)
 : m_weight(weight)
-, m_eDirH(NoneH)
-, m_eDirV(NoneV)
-, m_isSpawned(false)
+, m_eAction(ACT_NONE)
+, m_eDirH(DIR_NONEH)
+, m_eDirV(DIR_NONEV)
 , m_size(size)
 {
   m_animHandler = new CAnimationHandler(spritePath, size, position);
@@ -63,6 +63,20 @@ sf::Vector2f CEntity::getSize(void)
 	// Getter the size of the sprite.
 	
 	return m_size;
+}
+
+enum EAction CEntity::getAction()
+{
+  //
+  
+  return m_eAction;
+}
+
+void CEntity::setAction(EAction newAction)
+{
+  //
+  
+  m_eAction = newAction;
 }
 
 enum EDirectionHor CEntity::getDirectionH()

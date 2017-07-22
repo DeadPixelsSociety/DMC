@@ -27,12 +27,12 @@ CFoe::~CFoe()
 
 void CFoe::update(sf::Time dt, float limit)
 {
-	if (m_eDirH == Left) {
+	if (m_eDirH == DIR_LEFT) {
 	  m_animHandler->update(dt, MOV_LEFT);
 		if (getPosition().x + getSize().x > 0) {
 			getSprite()->move(-m_velocity * dt.asSeconds(), 0);
 		} else {
-			m_eDirH = Right;
+			m_eDirH = DIR_RIGHT;
 			getSprite()->move(m_velocity * dt.asSeconds(), 0);
 		}
 	} else {
@@ -40,7 +40,7 @@ void CFoe::update(sf::Time dt, float limit)
 		if (getPosition().x + getSize().x < limit) {
 			getSprite()->move(m_velocity * dt.asSeconds(), 0);
 		}	else {
-			m_eDirH = Left;
+			m_eDirH = DIR_LEFT;
 			getSprite()->move(-m_velocity * dt.asSeconds(), 0);
 		}
 	}
